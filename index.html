@@ -50,18 +50,21 @@
                 notice: "SKT 백마장 대리점 공식 온라인 스토어",
                 contactPhone: "070-7996-2040",
                 inquiryPhone: "1600-7816",
-                // Added heroImage setting
-                heroImage: "https://github.com/kdystyle/t-smartstore1/blob/main/skt2.jpg"
+                // Hero image with fallback mechanism
+                heroImage: "https://github.com/kdystyle/t-smartstore1/blob/main/skt1.jpg?raw=true"
             },
             products: [
-                { id: 1, type: 'new', name: "삼성 갤럭시 S24 Ultra", price: 1590000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/s24.jpg", badge: "BEST", sale: 5 },
-                { id: 2, type: 'new', name: "아이폰 15 Pro 256GB", price: 1550000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/iphone15.jpg", badge: "NEW", sale: 0 },
-                { id: 3, type: 'new', name: "갤럭시 Z 플립5", price: 1150000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/gz5.jpg", badge: "특가", sale: 15 },
-                { id: 4, type: 'new', name: "갤럭시 A25 5G", price: 449000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/ga25.jpg", badge: "효도폰", sale: 0 },
-                { id: 5, type: 'used', name: "[S급] 아이폰 13 미니", price: 550000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/iphone13.jpg", badge: "검수완료", sale: 0 },
-                { id: 6, type: 'used', name: "[A급] 갤럭시 S22", price: 380000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/gs22.jpg", badge: "특가", sale: 0 },
-                { id: 7, type: 'used', name: "[S급] 아이폰 12 Pro", price: 620000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/iphone12pro.jpg", badge: "배터리100", sale: 0 },
-                { id: 8, type: 'used', name: "[B급] 갤럭시 A34", price: 150000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/ga34.jpg", badge: "가성비", sale: 0 },
+                // Updated Galaxy A25 URL & Standardized others. 
+                // Note: If images don't exist in your repo, they will fall back to a placeholder.
+                { id: 1, type: 'new', name: "삼성 갤럭시 S24 Ultra", price: 1590000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/s24.jpg?raw=true", badge: "BEST", sale: 5 },
+                { id: 2, type: 'new', name: "아이폰 15 Pro 256GB", price: 1550000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/iphone15.jpg?raw=true", badge: "NEW", sale: 0 },
+                { id: 3, type: 'new', name: "갤럭시 Z 플립5", price: 1150000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/gz5.jpg?raw=true", badge: "특가", sale: 15 },
+                // Specific URL provided for Galaxy A25
+                { id: 4, type: 'new', name: "갤럭시 A25 5G", price: 449000, img: "https://github.com/kdystyle/t-smartstore1/raw/34d889235042e5959bd217b357f22366260de1cc/ga25.jpg", badge: "효도폰", sale: 0 },
+                { id: 5, type: 'used', name: "[S급] 아이폰 13 미니", price: 550000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/ipone13.jpg?raw=true", badge: "검수완료", sale: 0 },
+                { id: 6, type: 'used', name: "[A급] 갤럭시 S22", price: 380000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/gs22.jpg?raw=true", badge: "특가", sale: 0 },
+                { id: 7, type: 'used', name: "[S급] 아이폰 12 Pro", price: 620000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/iphone12pro.jpg?raw=true", badge: "배터리100", sale: 0 },
+                { id: 8, type: 'used', name: "[B급] 갤럭시 A34", price: 150000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/ga34.jpg?raw=true", badge: "가성비", sale: 0 },
             ],
             plans: [
                 { id: 101, carrier: "SKT", title: "5G 베이직", data: "8GB", call: "무제한", price: 49000, highlight: false },
@@ -159,8 +162,8 @@
                         </div>
                         <div class="md:w-1/2 mt-12 md:mt-0 relative flex justify-center">
                             <div class="w-72 h-72 bg-primary blur-[120px] rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-40 animate-pulse"></div>
-                            <!-- Updated Image Source to use store.settings.heroImage -->
-                            <img src="${store.settings.heroImage}" alt="Store" class="relative z-10 rounded-2xl shadow-2xl border border-white/10 transform rotate-1 hover:rotate-0 transition duration-700 w-full max-w-lg object-cover">
+                            <!-- Added onerror fallback -->
+                            <img src="${store.settings.heroImage}" onerror="this.src='https://placehold.co/800x600/1a1a1a/FFF?text=Store+Image+Not+Found'" alt="Store" class="relative z-10 rounded-2xl shadow-2xl border border-white/10 transform rotate-1 hover:rotate-0 transition duration-700 w-full max-w-lg object-cover">
                         </div>
                     </div>
                     <!-- Pattern -->
@@ -175,8 +178,9 @@
                 { icon: 'smartphone', label: '최신폰', href: '#new-phones' },
                 { icon: 'recycle', label: '중고폰', href: '#used-phones' },
                 { icon: 'signal', label: '요금제', href: '#plans' },
-                { icon: 'box-select', label: '오픈박스', href: '#' },
-                { icon: 'headphones', label: '액세서리', href: '#' }
+                // Changed href to void(0) and added onclick for non-functioning links
+                { icon: 'box-select', label: '오픈박스', href: 'javascript:void(0)', onclick: "showToast('오픈박스 메뉴는 준비중입니다.')" },
+                { icon: 'headphones', label: '액세서리', href: 'javascript:void(0)', onclick: "showToast('액세서리 메뉴는 준비중입니다.')" }
             ];
             return `
                 <nav class="sticky top-16 z-40 bg-white/95 backdrop-blur border-b border-gray-100">
@@ -184,7 +188,7 @@
                         <ul class="flex justify-between md:justify-start md:gap-12 overflow-x-auto hide-scrollbar py-4">
                             ${items.map(item => `
                                 <li class="min-w-[70px] text-center flex-shrink-0">
-                                    <a href="${item.href}" class="group flex flex-col items-center gap-2 cursor-pointer">
+                                    <a href="${item.href}" ${item.onclick ? `onclick="${item.onclick}"` : ''} class="group flex flex-col items-center gap-2 cursor-pointer">
                                         <div class="w-12 h-12 bg-gray-50 rounded-2xl flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors duration-300 shadow-sm">
                                             <i data-lucide="${item.icon}" class="w-6 h-6"></i>
                                         </div>
@@ -212,13 +216,13 @@
                                 <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">${title}</h2>
                                 <p class="text-sm text-gray-500">${type === 'new' ? '지금 가장 많이 찾는 최신 스마트폰' : '전문가가 엄격하게 검수한 인증 중고폰'}</p>
                             </div>
-                            <!-- '전체보기' 링크 삭제됨 -->
                         </div>
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
                             ${products.map(product => `
                                 <div class="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl hover:border-primary/20 transition-all duration-300 relative">
                                     <div class="aspect-square bg-gray-50 relative overflow-hidden">
-                                        <img src="${product.img}" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500" alt="${product.name}" loading="lazy">
+                                        <!-- Added onerror fallback -->
+                                        <img src="${product.img}" onerror="this.src='https://placehold.co/400?text=No+Image'" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500" alt="${product.name}" loading="lazy">
                                         ${product.badge ? `<span class="absolute top-3 left-3 bg-gray-900 text-white text-[10px] font-bold px-2.5 py-1 rounded">${product.badge}</span>` : ''}
                                         ${product.sale > 0 ? `<span class="absolute top-3 right-3 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded-full">-${product.sale}%</span>` : ''}
                                         <button onclick="addToCart(${product.id})" class="absolute bottom-3 right-3 bg-white text-gray-900 w-10 h-10 rounded-full shadow-lg flex items-center justify-center opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition duration-300 hover:bg-primary hover:text-white">
@@ -344,9 +348,9 @@
                                     최고의 서비스로 모시겠습니다.
                                 </p>
                                 <div class="flex gap-3">
-                                    <a href="#" class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition"><i data-lucide="facebook" class="w-4 h-4"></i></a>
-                                    <a href="#" class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition"><i data-lucide="instagram" class="w-4 h-4"></i></a>
-                                    <a href="#" class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition"><i data-lucide="message-circle" class="w-4 h-4"></i></a>
+                                    <a href="javascript:void(0)" onclick="showToast('준비중입니다')" class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition"><i data-lucide="facebook" class="w-4 h-4"></i></a>
+                                    <a href="javascript:void(0)" onclick="showToast('준비중입니다')" class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+                                    <a href="javascript:void(0)" onclick="showToast('준비중입니다')" class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition"><i data-lucide="message-circle" class="w-4 h-4"></i></a>
                                 </div>
                             </div>
                             
