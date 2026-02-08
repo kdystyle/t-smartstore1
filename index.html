@@ -45,21 +45,23 @@
         // --- 1. CMS Database (Simulated Backend) ---
         const defaultData = {
             settings: {
-                heroTitle: "믿을 수 있는\n백마장대리점 혜택",
+                heroTitle: "믿을 수 있는\nSKT 백마장대리점 혜택",
                 heroSubtitle: "인천 No.1 SK텔레콤 공식인증대리점\n최신 스마트폰부터 알뜰 요금제까지, 전문가와 상담하세요.",
-                notice: "(주)연합정보통신 백마장대리점 공식 온라인 스토어",
+                notice: "SKT 백마장 대리점 공식 온라인 스토어",
                 contactPhone: "070-7996-2040",
-                inquiryPhone: "1600-7816"
+                inquiryPhone: "1600-7816",
+                // Added heroImage setting
+                heroImage: "https://github.com/kdystyle/t-smartstore1/blob/main/skt2.jpg"
             },
             products: [
-                { id: 1, type: 'new', name: "삼성 갤럭시 S24 Ultra", price: 1590000, img: "https://placehold.co/400x400/222/FFF?text=Galaxy+S24+Ultra", badge: "BEST", sale: 5 },
-                { id: 2, type: 'new', name: "아이폰 15 Pro 256GB", price: 1550000, img: "https://placehold.co/400x400/555/FFF?text=iPhone+15+Pro", badge: "NEW", sale: 0 },
-                { id: 3, type: 'new', name: "갤럭시 Z 플립5", price: 1150000, img: "https://placehold.co/400x400/81F4E1/000?text=Galaxy+Z+Flip+5", badge: "특가", sale: 15 },
-                { id: 4, type: 'new', name: "갤럭시 A25 5G", price: 449000, img: "https://placehold.co/400x400/003366/FFF?text=Galaxy+A25+5G", badge: "효도폰", sale: 0 },
-                { id: 5, type: 'used', name: "[S급] 아이폰 13 미니", price: 550000, img: "https://placehold.co/400x400/pink/000?text=iPhone+13+Mini", badge: "검수완료", sale: 0 },
-                { id: 6, type: 'used', name: "[A급] 갤럭시 S22", price: 380000, img: "https://placehold.co/400x400/green/FFF?text=Galaxy+S22", badge: "특가", sale: 0 },
-                { id: 7, type: 'used', name: "[S급] 아이폰 12 Pro", price: 620000, img: "https://placehold.co/400x400/gold/000?text=iPhone+12+Pro", badge: "배터리100", sale: 0 },
-                { id: 8, type: 'used', name: "[B급] 갤럭시 A34", price: 150000, img: "https://placehold.co/400x400/silver/000?text=Galaxy+A34", badge: "가성비", sale: 0 },
+                { id: 1, type: 'new', name: "삼성 갤럭시 S24 Ultra", price: 1590000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/s24.jpg", badge: "BEST", sale: 5 },
+                { id: 2, type: 'new', name: "아이폰 15 Pro 256GB", price: 1550000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/iphone15.jpg", badge: "NEW", sale: 0 },
+                { id: 3, type: 'new', name: "갤럭시 Z 플립5", price: 1150000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/gz5.jpg", badge: "특가", sale: 15 },
+                { id: 4, type: 'new', name: "갤럭시 A25 5G", price: 449000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/ga25.jpg", badge: "효도폰", sale: 0 },
+                { id: 5, type: 'used', name: "[S급] 아이폰 13 미니", price: 550000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/iphone13.jpg", badge: "검수완료", sale: 0 },
+                { id: 6, type: 'used', name: "[A급] 갤럭시 S22", price: 380000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/gs22.jpg", badge: "특가", sale: 0 },
+                { id: 7, type: 'used', name: "[S급] 아이폰 12 Pro", price: 620000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/iphone12pro.jpg", badge: "배터리100", sale: 0 },
+                { id: 8, type: 'used', name: "[B급] 갤럭시 A34", price: 150000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/ga34.jpg", badge: "가성비", sale: 0 },
             ],
             plans: [
                 { id: 101, carrier: "SKT", title: "5G 베이직", data: "8GB", call: "무제한", price: 49000, highlight: false },
@@ -116,21 +118,14 @@
                     </div>
                     <div class="container mx-auto px-4 h-16 flex items-center justify-between">
                         <a href="#" onclick="navigate('home')" class="text-xl md:text-2xl font-black text-gray-900 tracking-tighter flex items-center gap-1">
-                            <span class="text-primary">백마장</span>대리점
+                            <span class="text-primary">SKT</span> 백마장대리점
                         </a>
                         
-                        <div class="hidden md:flex flex-1 mx-12 relative group">
-                            <input type="text" placeholder="원하는 모델명이나 요금제를 검색해보세요" 
-                                   class="w-full bg-gray-100/80 rounded-full py-2.5 pl-5 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all">
-                            <button class="absolute right-3 top-2.5 text-gray-400 group-hover:text-primary transition">
-                                <i data-lucide="search" class="w-5 h-5"></i>
-                            </button>
-                        </div>
+                        <!-- Search Bar Removed -->
+                        <div class="hidden md:flex flex-1 mx-12"></div>
 
                         <div class="flex items-center gap-5">
-                            <button class="md:hidden text-gray-600">
-                                <i data-lucide="search" class="w-6 h-6"></i>
-                            </button>
+                            <!-- Mobile Search Icon Removed -->
                             <button onclick="toggleCart()" class="relative text-gray-600 hover:text-primary transition">
                                 <i data-lucide="shopping-bag" class="w-6 h-6"></i>
                                 <span class="${state.cart.length > 0 ? 'scale-100' : 'scale-0'} absolute -top-1 -right-1 bg-primary text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full transition-transform duration-200 font-bold">${state.cart.length}</span>
@@ -164,7 +159,8 @@
                         </div>
                         <div class="md:w-1/2 mt-12 md:mt-0 relative flex justify-center">
                             <div class="w-72 h-72 bg-primary blur-[120px] rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-40 animate-pulse"></div>
-                            <img src="https://placehold.co/800x600/1a1a1a/FFF?text=Premium+SKT+Store+Interior" alt="Store" class="relative z-10 rounded-2xl shadow-2xl border border-white/10 transform rotate-1 hover:rotate-0 transition duration-700 w-full max-w-lg">
+                            <!-- Updated Image Source to use store.settings.heroImage -->
+                            <img src="${store.settings.heroImage}" alt="Store" class="relative z-10 rounded-2xl shadow-2xl border border-white/10 transform rotate-1 hover:rotate-0 transition duration-700 w-full max-w-lg object-cover">
                         </div>
                     </div>
                     <!-- Pattern -->
@@ -340,7 +336,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
                             <div>
                                 <h3 class="text-white text-lg font-bold mb-6 flex items-center gap-2">
-                                    백마장대리점
+                                    SKT 백마장대리점
                                 </h3>
                                 <p class="leading-relaxed mb-4">
                                     (주)연합정보통신<br>
@@ -433,6 +429,12 @@
                                 <div>
                                     <label class="block text-sm font-bold mb-1">서브 타이틀</label>
                                     <textarea id="admin-hero-subtitle" class="w-full border rounded p-2 text-sm" rows="2" onchange="updateSetting('heroSubtitle', this.value)">${store.settings.heroSubtitle}</textarea>
+                                </div>
+                                <!-- Added Main Image URL Input -->
+                                <div>
+                                    <label class="block text-sm font-bold mb-1">메인 이미지 URL (Premium Store)</label>
+                                    <input type="text" class="w-full border rounded p-2 text-sm text-gray-600 bg-gray-50" value="${store.settings.heroImage}" onchange="updateSetting('heroImage', this.value)" placeholder="https://...">
+                                    <p class="text-xs text-gray-400 mt-1">* 이미지 주소를 입력하세요.</p>
                                 </div>
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
