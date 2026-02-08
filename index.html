@@ -61,7 +61,7 @@
                 { id: 3, type: 'new', name: "갤럭시 Z 플립5", price: 1150000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/gz5.jpg?raw=true", badge: "특가", sale: 15 },
                 // Specific URL provided for Galaxy A25
                 { id: 4, type: 'new', name: "갤럭시 A25 5G", price: 449000, img: "https://github.com/kdystyle/t-smartstore1/raw/34d889235042e5959bd217b357f22366260de1cc/ga25.jpg", badge: "효도폰", sale: 0 },
-                { id: 5, type: 'used', name: "[S급] 아이폰 13 미니", price: 550000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/ipone13.jpg?raw=true", badge: "검수완료", sale: 0 },
+                { id: 5, type: 'used', name: "[S급] 아이폰 13 미니", price: 550000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/iphone13.jpg?raw=true", badge: "검수완료", sale: 0 },
                 { id: 6, type: 'used', name: "[A급] 갤럭시 S22", price: 380000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/gs22.jpg?raw=true", badge: "특가", sale: 0 },
                 { id: 7, type: 'used', name: "[S급] 아이폰 12 Pro", price: 620000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/iphone12pro.jpg?raw=true", badge: "배터리100", sale: 0 },
                 { id: 8, type: 'used', name: "[B급] 갤럭시 A34", price: 150000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/ga34.jpg?raw=true", badge: "가성비", sale: 0 },
@@ -878,13 +878,25 @@
 
         // Admin Actions
         window.toggleAdmin = function() {
-            state.isAdmin = !state.isAdmin;
-            // When entering admin, close cart/modals
-            if(state.isAdmin) {
-                state.cartOpen = false;
-                Object.keys(state.modals).forEach(k => state.modals[k] = false);
+            if (state.isAdmin) {
+                // Logout
+                state.isAdmin = false;
+                showToast("관리자 모드가 종료되었습니다.");
+                render();
+            } else {
+                // Login
+                const password = prompt("관리자 비밀번호를 입력하세요:");
+                if (password === "1234") { // Simple password check
+                    state.isAdmin = true;
+                    // When entering admin, close cart/modals
+                    state.cartOpen = false;
+                    Object.keys(state.modals).forEach(k => state.modals[k] = false);
+                    showToast("관리자 모드로 전환되었습니다.");
+                    render();
+                } else if (password !== null) {
+                    alert("비밀번호가 올바르지 않습니다.");
+                }
             }
-            render();
         }
 
         window.updateSetting = function(key, value) {
