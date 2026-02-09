@@ -51,7 +51,8 @@
                 contactPhone: "070-7996-2040",
                 inquiryPhone: "1600-7816",
                 heroImage: "https://github.com/kdystyle/t-smartstore1/blob/main/skt1.jpg?raw=true",
-                adminMobile: "010-0000-0000" // Default value
+                adminMobile: "010-0000-0000",
+                adminPassword: "1234" // Default Admin Password
             },
             // ... (products, plans, etc. remain same) ...
             products: [
@@ -430,6 +431,15 @@
                         <div class="bg-white rounded-xl p-6 shadow-sm">
                             <h3 class="font-bold text-lg mb-4">사이트 기본 설정</h3>
                             <div class="space-y-4">
+                                <!-- Admin Password Setting (New) -->
+                                <div class="bg-yellow-50 p-3 rounded border border-yellow-200 mb-4">
+                                    <label class="block text-sm font-bold mb-1 text-yellow-800 flex items-center gap-1">
+                                        <i data-lucide="lock" class="w-4 h-4"></i> 관리자 접속 비밀번호 변경
+                                    </label>
+                                    <input type="text" class="w-full border border-yellow-300 rounded p-2 text-sm font-bold text-gray-800 bg-white" value="${store.settings.adminPassword || '1234'}" onchange="updateSetting('adminPassword', this.value)">
+                                    <p class="text-xs text-yellow-600 mt-1">* 이 비밀번호를 잊어버리지 않도록 주의하세요.</p>
+                                </div>
+
                                 <div>
                                     <label class="block text-sm font-bold mb-1">메인 타이틀</label>
                                     <textarea id="admin-hero-title" class="w-full border rounded p-2 text-sm" rows="2" onchange="updateSetting('heroTitle', this.value)">${store.settings.heroTitle}</textarea>
@@ -452,7 +462,7 @@
                                         <label class="block text-sm font-bold mb-1">제휴문의 번호 (노출용)</label>
                                         <input type="text" class="w-full border rounded p-2 text-sm" value="${store.settings.inquiryPhone}" onchange="updateSetting('inquiryPhone', this.value)">
                                     </div>
-                                    <!-- SMS Receiver Number Input (Fixed Visibility) -->
+                                    <!-- SMS Receiver Number Input -->
                                     <div class="col-span-2 bg-red-50 p-3 rounded border border-red-100">
                                         <label class="block text-sm font-bold mb-1 text-red-800 flex items-center gap-1">
                                             <i data-lucide="message-square" class="w-4 h-4"></i> 상담/가입 신청 수신 번호 (관리자 문자)
@@ -917,7 +927,10 @@
             } else {
                 // Login
                 const password = prompt("관리자 비밀번호를 입력하세요:");
-                if (password === "1234") { // Simple password check
+                // Check against stored password (default '1234' if missing)
+                const currentPassword = store.settings.adminPassword || '1234';
+                
+                if (password === currentPassword) { 
                     state.isAdmin = true;
                     // When entering admin, close cart/modals
                     state.cartOpen = false;
