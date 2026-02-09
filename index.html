@@ -54,7 +54,6 @@
                 adminMobile: "010-0000-0000",
                 adminPassword: "1234" // Default Admin Password
             },
-            // ... (products, plans, etc. remain same) ...
             products: [
                 { id: 1, type: 'new', name: "삼성 갤럭시 S24 Ultra", price: 1590000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/s24.jpg?raw=true", badge: "BEST", sale: 5 },
                 { id: 2, type: 'new', name: "아이폰 15 Pro 256GB", price: 1550000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/iphone15.jpg?raw=true", badge: "NEW", sale: 0 },
@@ -81,14 +80,21 @@
             ]
         };
 
-        // Initialize State with Persistence (Improved Logic)
-        // 기존 데이터가 있어도 새로운 설정(adminMobile 등)이 누락되지 않도록 병합합니다.
+        // Initialize State with Persistence (Robust Merge)
+        // 기존 데이터가 있어도 새로운 키값(adminPassword 등)이 없으면 defaultData에서 가져오도록 강제 병합
         let savedStore = JSON.parse(localStorage.getItem('baekmajang_db'));
-        let store = savedStore ? { 
-            ...defaultData, 
-            ...savedStore, 
-            settings: { ...defaultData.settings, ...savedStore.settings } 
-        } : defaultData;
+        let store = defaultData;
+        
+        if (savedStore) {
+            store = {
+                ...defaultData,
+                ...savedStore,
+                settings: {
+                    ...defaultData.settings,
+                    ...(savedStore.settings || {})
+                }
+            };
+        }
         
         function saveStore() {
             localStorage.setItem('baekmajang_db', JSON.stringify(store));
@@ -96,9 +102,11 @@
         }
 
         function resetStore() {
-            localStorage.removeItem('baekmajang_db');
-            store = defaultData;
-            location.reload();
+            if(confirm("모든 데이터를 초기화하시겠습니까? 상품 및 설정이 기본값으로 돌아갑니다.")) {
+                localStorage.removeItem('baekmajang_db');
+                store = defaultData;
+                location.reload();
+            }
         }
 
         // --- 2. State Management (Router & User) ---
@@ -129,16 +137,13 @@
                             <span class="text-primary">SKT</span> 백마장대리점
                         </a>
                         
-                        <!-- Search Bar Removed -->
                         <div class="hidden md:flex flex-1 mx-12"></div>
 
                         <div class="flex items-center gap-5">
-                            <!-- Mobile Search Icon Removed -->
                             <button onclick="toggleCart()" class="relative text-gray-600 hover:text-primary transition">
                                 <i data-lucide="shopping-bag" class="w-6 h-6"></i>
                                 <span class="${state.cart.length > 0 ? 'scale-100' : 'scale-0'} absolute -top-1 -right-1 bg-primary text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full transition-transform duration-200 font-bold">${state.cart.length}</span>
                             </button>
-                            <!-- User Icon Removed -->
                         </div>
                     </div>
                 </header>
@@ -165,7 +170,6 @@
                         </div>
                         <div class="md:w-1/2 mt-12 md:mt-0 relative flex justify-center">
                             <div class="w-72 h-72 bg-primary blur-[120px] rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-40 animate-pulse"></div>
-                            <!-- Added onerror fallback -->
                             <img src="${store.settings.heroImage}" onerror="this.src='https://placehold.co/800x600/1a1a1a/FFF?text=Store+Image+Not+Found'" alt="Store" class="relative z-10 rounded-2xl shadow-2xl border border-white/10 transform rotate-1 hover:rotate-0 transition duration-700 w-full max-w-lg object-cover">
                         </div>
                     </div>
@@ -181,7 +185,6 @@
                 { icon: 'smartphone', label: '최신폰', href: '#new-phones' },
                 { icon: 'recycle', label: '중고폰', href: '#used-phones' },
                 { icon: 'signal', label: '요금제', href: '#plans' },
-                // Changed href to void(0) and added onclick for non-functioning links
                 { icon: 'box-select', label: '오픈박스', href: 'javascript:void(0)', onclick: "showToast('오픈박스 메뉴는 준비중입니다.')" },
                 { icon: 'headphones', label: '액세서리', href: 'javascript:void(0)', onclick: "showToast('액세서리 메뉴는 준비중입니다.')" }
             ];
@@ -224,7 +227,6 @@
                             ${products.map(product => `
                                 <div class="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl hover:border-primary/20 transition-all duration-300 relative">
                                     <div class="aspect-square bg-gray-50 relative overflow-hidden">
-                                        <!-- Added onerror fallback -->
                                         <img src="${product.img}" onerror="this.src='https://placehold.co/400?text=No+Image'" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500" alt="${product.name}" loading="lazy">
                                         ${product.badge ? `<span class="absolute top-3 left-3 bg-gray-900 text-white text-[10px] font-bold px-2.5 py-1 rounded">${product.badge}</span>` : ''}
                                         ${product.sale > 0 ? `<span class="absolute top-3 right-3 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded-full">-${product.sale}%</span>` : ''}
@@ -431,9 +433,10 @@
                         <div class="bg-white rounded-xl p-6 shadow-sm">
                             <h3 class="font-bold text-lg mb-4">사이트 기본 설정</h3>
                             <div class="space-y-4">
-                                <!-- Admin Password Setting (New) -->
+                                <!-- Admin Password Setting (New - ID: 1) -->
                                 <div class="bg-yellow-50 p-3 rounded border border-yellow-200 mb-4">
                                     <label class="block text-sm font-bold mb-1 text-yellow-800 flex items-center gap-1">
+                                        <span class="bg-yellow-200 text-yellow-900 text-[10px] px-1.5 py-0.5 rounded mr-1">1번</span>
                                         <i data-lucide="lock" class="w-4 h-4"></i> 관리자 접속 비밀번호 변경
                                     </label>
                                     <input type="text" class="w-full border border-yellow-300 rounded p-2 text-sm font-bold text-gray-800 bg-white" value="${store.settings.adminPassword || '1234'}" onchange="updateSetting('adminPassword', this.value)">
