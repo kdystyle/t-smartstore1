@@ -51,7 +51,9 @@
                 contactPhone: "070-7996-2040",
                 inquiryPhone: "1600-7816",
                 // Hero image with fallback mechanism
-                heroImage: "https://github.com/kdystyle/t-smartstore1/blob/main/skt1.jpg?raw=true"
+                heroImage: "https://github.com/kdystyle/t-smartstore1/blob/main/skt1.jpg?raw=true",
+                // Added Admin Mobile for SMS receiving
+                adminMobile: "010-0000-0000" 
             },
             products: [
                 // Updated Galaxy A25 URL & Standardized others. 
@@ -61,7 +63,7 @@
                 { id: 3, type: 'new', name: "갤럭시 Z 플립5", price: 1150000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/gz5.jpg?raw=true", badge: "특가", sale: 15 },
                 // Specific URL provided for Galaxy A25
                 { id: 4, type: 'new', name: "갤럭시 A25 5G", price: 449000, img: "https://github.com/kdystyle/t-smartstore1/raw/34d889235042e5959bd217b357f22366260de1cc/ga25.jpg", badge: "효도폰", sale: 0 },
-                { id: 5, type: 'used', name: "[S급] 아이폰 13 미니", price: 550000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/ipone13.jpg?raw=true", badge: "검수완료", sale: 0 },
+                { id: 5, type: 'used', name: "[S급] 아이폰 13 미니", price: 550000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/iphone13.jpg?raw=true", badge: "검수완료", sale: 0 },
                 { id: 6, type: 'used', name: "[A급] 갤럭시 S22", price: 380000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/gs22.jpg?raw=true", badge: "특가", sale: 0 },
                 { id: 7, type: 'used', name: "[S급] 아이폰 12 Pro", price: 620000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/iphone12pro.jpg?raw=true", badge: "배터리100", sale: 0 },
                 { id: 8, type: 'used', name: "[B급] 갤럭시 A34", price: 150000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/ga34.jpg?raw=true", badge: "가성비", sale: 0 },
@@ -133,9 +135,7 @@
                                 <i data-lucide="shopping-bag" class="w-6 h-6"></i>
                                 <span class="${state.cart.length > 0 ? 'scale-100' : 'scale-0'} absolute -top-1 -right-1 bg-primary text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full transition-transform duration-200 font-bold">${state.cart.length}</span>
                             </button>
-                            <button onclick="toggleModal('login')" class="text-gray-600 hover:text-primary transition hidden md:block">
-                                <i data-lucide="user" class="w-6 h-6"></i>
-                            </button>
+                            <!-- User Icon Removed -->
                         </div>
                     </div>
                 </header>
@@ -442,12 +442,20 @@
                                 </div>
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label class="block text-sm font-bold mb-1">고객센터 번호</label>
+                                        <label class="block text-sm font-bold mb-1">고객센터 번호 (노출용)</label>
                                         <input type="text" class="w-full border rounded p-2 text-sm" value="${store.settings.contactPhone}" onchange="updateSetting('contactPhone', this.value)">
                                     </div>
                                     <div>
-                                        <label class="block text-sm font-bold mb-1">제휴문의 번호</label>
+                                        <label class="block text-sm font-bold mb-1">제휴문의 번호 (노출용)</label>
                                         <input type="text" class="w-full border rounded p-2 text-sm" value="${store.settings.inquiryPhone}" onchange="updateSetting('inquiryPhone', this.value)">
+                                    </div>
+                                    <!-- SMS Receiver Number Input -->
+                                    <div class="col-span-2 bg-red-50 p-3 rounded border border-red-100">
+                                        <label class="block text-sm font-bold mb-1 text-red-800 flex items-center gap-1">
+                                            <i data-lucide="message-square" class="w-4 h-4"></i> 상담/가입 신청 수신 번호 (관리자 문자)
+                                        </label>
+                                        <input type="text" class="w-full border border-red-200 rounded p-2 text-sm font-bold text-gray-800" value="${store.settings.adminMobile}" onchange="updateSetting('adminMobile', this.value)" placeholder="010-0000-0000">
+                                        <p class="text-xs text-red-500 mt-1">* 실제 문자를 받을 휴대폰 번호를 입력하세요 (예: 사장님 폰번호)</p>
                                     </div>
                                 </div>
                             </div>
@@ -801,30 +809,60 @@
             render();
         }
 
-        // Formspree Signup Handler
+        // --- SMS Sending Logic (Replaces Formspree) ---
+        function sendSMS(type, formData) {
+            const adminMobile = store.settings.adminMobile.replace(/[^0-9]/g, ''); // Numbers only
+            let message = '';
+
+            if (!adminMobile || adminMobile === "01000000000") {
+                alert("관리자 설정에서 '수신 번호'를 먼저 설정해주세요.");
+                return false;
+            }
+
+            if (type === 'consultation') {
+                const cartItems = formData.get('cart_items') || '선택 상품 없음';
+                message = `[SKT백마장 상담신청]\n` +
+                          `▶ 성함: ${formData.get('name')}\n` +
+                          `▶ 연락처: ${formData.get('phone')}\n` +
+                          `▶ 요청사항: ${formData.get('message')}\n` +
+                          `▶ 관심상품: ${cartItems}`;
+            } else if (type === 'signup') {
+                message = `[SKT백마장 회원가입]\n` +
+                          `▶ 이름: ${formData.get('name')}\n` +
+                          `▶ 생년월일: ${formData.get('birthday')}\n` +
+                          `▶ 아이디: ${formData.get('userid')}\n` +
+                          `▶ 연락처: ${formData.get('phone')}`;
+            }
+
+            // URL Encode the message
+            const encodedMessage = encodeURIComponent(message);
+            
+            // Detect iOS vs Android for correct SMS delimiter
+            // iOS uses '&', Android uses '?' usually, but '?' works on most modern devices or is handled by browser
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            const delimiter = isIOS ? '&' : '?';
+            
+            const smsUrl = `sms:${adminMobile}${delimiter}body=${encodedMessage}`;
+            
+            // Open SMS app
+            window.location.href = smsUrl;
+            return true;
+        }
+
+        // Handle Signup (SMS)
         window.handleSignup = function(event) {
             event.preventDefault();
             const form = event.target;
             const formData = new FormData(form);
 
-            fetch("https://formspree.io/f/xykdylon", {
-                method: "POST",
-                body: formData,
-                headers: { 'Accept': 'application/json' }
-            }).then(response => {
-                if (response.ok) {
-                    showToast('회원가입 신청이 완료되었습니다.');
-                    toggleModal('signup');
-                    form.reset();
-                } else {
-                    showToast('오류가 발생했습니다. 다시 시도해주세요.');
-                }
-            }).catch(error => {
-                showToast('네트워크 오류가 발생했습니다.');
-            });
+            if(sendSMS('signup', formData)) {
+                showToast('문자 메시지 앱으로 이동합니다. [전송]을 눌러주세요.');
+                toggleModal('signup');
+                form.reset();
+            }
         }
 
-        // Formspree Consultation Handler
+        // Handle Consultation (SMS)
         window.submitConsultation = function(event) {
             event.preventDefault();
             const form = event.target;
@@ -832,7 +870,7 @@
             // Populate hidden cart items field based on selection mode
             let summary = '';
             if (state.selectedPlan) {
-                summary = `[요금제 상담] ${state.selectedPlan}`;
+                summary = `[요금제] ${state.selectedPlan}`;
             } else {
                 summary = state.cart.map(item => `${item.name} (${formatPrice(item.price)})`).join(', ');
             }
@@ -840,23 +878,13 @@
 
             const formData = new FormData(form);
 
-            fetch("https://formspree.io/f/xykdylon", {
-                method: "POST",
-                body: formData,
-                headers: { 'Accept': 'application/json' }
-            }).then(response => {
-                if (response.ok) {
-                    showToast('상담 신청이 정상적으로 접수되었습니다.');
-                    state.cart = []; // Clear cart
-                    state.selectedPlan = null; // Clear plan selection
-                    state.modals.consultation = false;
-                    render();
-                } else {
-                    showToast('오류가 발생했습니다. 다시 시도해주세요.');
-                }
-            }).catch(error => {
-                showToast('네트워크 오류가 발생했습니다.');
-            });
+            if(sendSMS('consultation', formData)) {
+                showToast('문자 메시지 앱으로 이동합니다. [전송]을 눌러주세요.');
+                state.cart = []; // Clear cart
+                state.selectedPlan = null; // Clear plan selection
+                state.modals.consultation = false;
+                render();
+            }
         }
 
         window.inquiryPlan = function(title) {
