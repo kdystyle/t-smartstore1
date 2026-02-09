@@ -50,18 +50,14 @@
                 notice: "SKT 백마장 대리점 공식 온라인 스토어",
                 contactPhone: "070-7996-2040",
                 inquiryPhone: "1600-7816",
-                // Hero image with fallback mechanism
                 heroImage: "https://github.com/kdystyle/t-smartstore1/blob/main/skt1.jpg?raw=true",
-                // Added Admin Mobile for SMS receiving
-                adminMobile: "010-0000-0000" 
+                adminMobile: "010-0000-0000" // Default value
             },
+            // ... (products, plans, etc. remain same) ...
             products: [
-                // Updated Galaxy A25 URL & Standardized others. 
-                // Note: If images don't exist in your repo, they will fall back to a placeholder.
                 { id: 1, type: 'new', name: "삼성 갤럭시 S24 Ultra", price: 1590000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/s24.jpg?raw=true", badge: "BEST", sale: 5 },
                 { id: 2, type: 'new', name: "아이폰 15 Pro 256GB", price: 1550000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/iphone15.jpg?raw=true", badge: "NEW", sale: 0 },
                 { id: 3, type: 'new', name: "갤럭시 Z 플립5", price: 1150000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/gz5.jpg?raw=true", badge: "특가", sale: 15 },
-                // Specific URL provided for Galaxy A25
                 { id: 4, type: 'new', name: "갤럭시 A25 5G", price: 449000, img: "https://github.com/kdystyle/t-smartstore1/raw/34d889235042e5959bd217b357f22366260de1cc/ga25.jpg", badge: "효도폰", sale: 0 },
                 { id: 5, type: 'used', name: "[S급] 아이폰 13 미니", price: 550000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/iphone13.jpg?raw=true", badge: "검수완료", sale: 0 },
                 { id: 6, type: 'used', name: "[A급] 갤럭시 S22", price: 380000, img: "https://github.com/kdystyle/t-smartstore1/blob/main/gs22.jpg?raw=true", badge: "특가", sale: 0 },
@@ -84,8 +80,14 @@
             ]
         };
 
-        // Initialize State with Persistence
-        let store = JSON.parse(localStorage.getItem('baekmajang_db')) || defaultData;
+        // Initialize State with Persistence (Improved Logic)
+        // 기존 데이터가 있어도 새로운 설정(adminMobile 등)이 누락되지 않도록 병합합니다.
+        let savedStore = JSON.parse(localStorage.getItem('baekmajang_db'));
+        let store = savedStore ? { 
+            ...defaultData, 
+            ...savedStore, 
+            settings: { ...defaultData.settings, ...savedStore.settings } 
+        } : defaultData;
         
         function saveStore() {
             localStorage.setItem('baekmajang_db', JSON.stringify(store));
@@ -347,10 +349,12 @@
                                     SK텔레콤 공식인증대리점<br>
                                     최고의 서비스로 모시겠습니다.
                                 </p>
+                                <!-- Social Links replaced with Naver Blog -->
                                 <div class="flex gap-3">
-                                    <a href="javascript:void(0)" onclick="showToast('준비중입니다')" class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition"><i data-lucide="facebook" class="w-4 h-4"></i></a>
-                                    <a href="javascript:void(0)" onclick="showToast('준비중입니다')" class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition"><i data-lucide="instagram" class="w-4 h-4"></i></a>
-                                    <a href="javascript:void(0)" onclick="showToast('준비중입니다')" class="w-8 h-8 rounded bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition"><i data-lucide="message-circle" class="w-4 h-4"></i></a>
+                                    <a href="https://blog.naver.com/skt1996s" target="_blank" class="inline-flex items-center gap-2 bg-[#03C75A] text-white px-4 py-2 rounded-lg hover:bg-[#02b351] transition shadow-lg shadow-green-900/20">
+                                        <span class="font-black font-sans">N</span>
+                                        <span class="font-bold text-xs">공식 블로그 바로가기</span>
+                                    </a>
                                 </div>
                             </div>
                             
@@ -434,10 +438,9 @@
                                     <label class="block text-sm font-bold mb-1">서브 타이틀</label>
                                     <textarea id="admin-hero-subtitle" class="w-full border rounded p-2 text-sm" rows="2" onchange="updateSetting('heroSubtitle', this.value)">${store.settings.heroSubtitle}</textarea>
                                 </div>
-                                <!-- Added Main Image URL Input -->
                                 <div>
                                     <label class="block text-sm font-bold mb-1">메인 이미지 URL (Premium Store)</label>
-                                    <input type="text" class="w-full border rounded p-2 text-sm text-gray-600 bg-gray-50" value="${store.settings.heroImage}" onchange="updateSetting('heroImage', this.value)" placeholder="https://...">
+                                    <input type="text" class="w-full border rounded p-2 text-sm text-gray-600 bg-gray-50" value="${store.settings.heroImage || ''}" onchange="updateSetting('heroImage', this.value)" placeholder="https://...">
                                     <p class="text-xs text-gray-400 mt-1">* 이미지 주소를 입력하세요.</p>
                                 </div>
                                 <div class="grid grid-cols-2 gap-4">
@@ -449,12 +452,12 @@
                                         <label class="block text-sm font-bold mb-1">제휴문의 번호 (노출용)</label>
                                         <input type="text" class="w-full border rounded p-2 text-sm" value="${store.settings.inquiryPhone}" onchange="updateSetting('inquiryPhone', this.value)">
                                     </div>
-                                    <!-- SMS Receiver Number Input -->
+                                    <!-- SMS Receiver Number Input (Fixed Visibility) -->
                                     <div class="col-span-2 bg-red-50 p-3 rounded border border-red-100">
                                         <label class="block text-sm font-bold mb-1 text-red-800 flex items-center gap-1">
                                             <i data-lucide="message-square" class="w-4 h-4"></i> 상담/가입 신청 수신 번호 (관리자 문자)
                                         </label>
-                                        <input type="text" class="w-full border border-red-200 rounded p-2 text-sm font-bold text-gray-800" value="${store.settings.adminMobile}" onchange="updateSetting('adminMobile', this.value)" placeholder="010-0000-0000">
+                                        <input type="text" class="w-full border border-red-200 rounded p-2 text-sm font-bold text-gray-800" value="${store.settings.adminMobile || ''}" onchange="updateSetting('adminMobile', this.value)" placeholder="010-0000-0000">
                                         <p class="text-xs text-red-500 mt-1">* 실제 문자를 받을 휴대폰 번호를 입력하세요 (예: 사장님 폰번호)</p>
                                     </div>
                                 </div>
